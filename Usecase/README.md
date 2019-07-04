@@ -39,7 +39,7 @@
 ## 관리자 시나리오
 
 ------
-
+[usecase 시나리오 word파일 다운로드](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/Usecase/1차/usecase%20form_20190704.docx)
 
 
 ## 고객 시나리오
