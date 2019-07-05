@@ -27,3 +27,14 @@
 5. 테이블명 변경(회원 -> 고객)
 6. 고객 테이블 회원권한 속성 추가 
 ![2-1차 ERD 사진(1)](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/ERD/2차/ERD_20190704-2(1).PNG)
+---
+3차 변경내역(2019-07-05)
+
+1. DATA TYPE, 물리 이름 작성, 논리 이름 수정 
+2. 배송지 테이블 추가, 주문테이블 
+3. 주문상세내역 테이블 PK키 생성
+4. 게시판 -> 게시판_카테고리 (테이블명 변경)
+5. 고객 테이블 내 배송지 관련 속성 삭제, 주소 테이블 생성 
+
+![3차 ERD 사진(1)](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/ERD/3차/ERD_20190705-(1).PNG)
+![3차 ERD 사진(2)](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/ERD/3차/ERD_20190705-(2).PNG)
