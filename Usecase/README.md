@@ -2,8 +2,8 @@
 
 # Usecase Diagram
 ![Usecase  Diagram 1차](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/Usecase/1%EC%B0%A8/cafe24_shoppingmall_usecase_diagram_20190701.PNG)
-
-![Usecase  Diagram 1차](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/Usecase/1%EC%B0%A8/cafe24_shoppingmall_usecase_diagram_20190701.PNG)
+---
+![Usecase  Diagram 1차](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/Usecase/2%EC%B0%A8/cafe24_shoppingmall_usecase_diagram_20190705.PNG)
 
 
 # Usecase 식별자 목록
