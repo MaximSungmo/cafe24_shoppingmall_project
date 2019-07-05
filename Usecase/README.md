@@ -36,10 +36,20 @@
 # Usecase 시나리오
 
 ## 관리자 시나리오
-
+![관리자시나리오]https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/Usecase/2%EC%B0%A8/admin_%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4_20190705_1.PNG
+![관리자시나리오]https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/Usecase/2%EC%B0%A8/admin_%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4_20190705_2.PNG
+![관리자시나리오]https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/Usecase/2%EC%B0%A8/admin_%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4_20190705_3.PNG
+![관리자시나리오]https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/Usecase/2%EC%B0%A8/admin_%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4_20190705_4.PNG
+![관리자시나리오]https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/Usecase/2%EC%B0%A8/admin_%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4_20190705_5.PNG
 
 
 ## 고객 시나리오
+![고객시나리오]https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/Usecase/2%EC%B0%A8/c_%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4_20190705_1.PNG
+![고객시나리오]https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/Usecase/2%EC%B0%A8/c_%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4_20190705_2.PNG
+![고객시나리오]https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/Usecase/2%EC%B0%A8/c_%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4_20190705_3.PNG
+![고객시나리오]https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/Usecase/2%EC%B0%A8/c_%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4_20190705_4.PNG
+
+
 
 
 # 암호화 전략 
