@@ -1,10 +1,9 @@
 # Usecase 
 
-1차 : 2019-07-04 / 전체적인 윤곽 잡기
- 추후 예정 : 세부사항 파악, 기능 통합 삭제 필요.
-
----
 # Usecase Diagram
+[Usecase  Diagram 1차](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/Usecase/1%EC%B0%A8/cafe24_shoppingmall_usecase_diagram_20190701.PNG)
+
+[Usecase  Diagram 1차](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/Usecase/1%EC%B0%A8/cafe24_shoppingmall_usecase_diagram_20190701.PNG)
 
 
 # Usecase 식별자 목록
@@ -36,15 +35,15 @@
 
 ## 관리자 시나리오
 
-------
 [usecase 시나리오 word파일 다운로드](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/Usecase/1차/usecase%20form_20190704.docx)
 
 
 ## 고객 시나리오
 
-------
 
 
+# 수정내역
+1차 : 2019-07-04 / 전체적인 윤곽 잡기
+ 추후 예정 : 세부사항 파악, 기능 통합 삭제 필요.
 
-## 
 
