@@ -36,5 +36,5 @@
 4. 게시판 -> 게시판_카테고리 (테이블명 변경)
 5. 고객 테이블 내 배송지 관련 속성 삭제, 주소 테이블 생성 
 
-![3차 ERD 사진(1)](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/ERD/3차/ERD_20190705-(1).PNG)
-![3차 ERD 사진(2)](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/ERD/3차/ERD_20190705-(2).PNG)
+![3차 ERD 사진(1)](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/ERD/3차/ERD_20190705(1).PNG)
+![3차 ERD 사진(2)](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/ERD/3차/ERD_20190705(2).PNG)
