@@ -1,1 +1,0 @@
-sequence_diagram
