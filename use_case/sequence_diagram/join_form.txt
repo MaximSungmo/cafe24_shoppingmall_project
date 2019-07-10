@@ -1,0 +1,54 @@
+#For join_user
+
+Customer->+join_view: 가입요청
+note right of join_view: url:/user/join, method:get
+join_view->+user_controller: request()
+user_controller->+terms_of_use_DB:get_terms_of_use()
+terms_of_use_DB-->-user_controller:return:terms_of_use_vo
+note left of user_controller:/user/terms_of_use_form.html
+note left of user_controller:param : terms_of_use_vo
+user_controller-->-join_view:response()
+join_view-->-Customer:약관동의페이지
+
+alt 필수항목미동의
+    Customer->+join_view:동의 여부 체크 
+    join_view-->-Customer: 회원가입실패
+else 필수항목동의
+    Customer->+join_view:동의 여부 체크 
+note right of join_view: url:/user/join, method:post
+note right of join_view:param:terms_of_use_vo, agreement
+    join_view->+user_controller:request()
+note left of user_controller:/user/joinform.html
+note left of user_controller:param:terms_of_use_vo, agreement
+    user_controller-->-join_view:response()
+    join_view-->-Customer:회원가입페이지
+end
+
+Customer->+join_view:input user_vo
+
+loop ID 중복체크
+    Customer->+join_view:ID 중복체크
+note right of join_view: url:/api/user/checkid?id={id}, method:get
+    join_view->+user_controller:request()
+    user_controller->+terms_of_use_DB:get_user_id()
+    terms_of_use_DB-->-user_controller:return:user_vo
+note left of user_controller:param:boolean(user_vo!=null)
+    user_controller-->-join_view:response()
+    join_view-->-Customer:ID 중복체크결과
+end
+
+join_view->+user_controller:validate input
+note right of join_view: check input data
+user_controller-->join_view:validate result
+user_controller->+customer_DB:insert(user_vo)
+customer_DB-->-user_controller:return: PK
+user_controller->+CUSTOMER_AND_TERMS_OF_USE_DB:insert(user_vo,terms_of_use_vo)
+CUSTOMER_AND_TERMS_OF_USE_DB-->-user_controller:return:true
+note left of user_controller:/user/joinsuccess.html
+user_controller-->-join_view: response()
+join_view-->-Customer:회원가입완료
+
+
+
+
+
