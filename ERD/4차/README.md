@@ -5,5 +5,5 @@
 3. ITEM -> PRODUCT 속성 및 테이블명 변경 
 4. 고객테이블 속성 추가 
 
-![4차 ERD 사진](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/ERD/4차/ERD_20190717.PNG)
+![4차 ERD 사진](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/ERD/4%EC%B0%A8/ERD_20190717).PNG)
 
