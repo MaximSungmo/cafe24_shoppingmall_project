@@ -1,4 +1,4 @@
-###  회원가입 API(/customer/checkemail)
+###  회원가입 API(/api/customer)
 
 ■ request
 

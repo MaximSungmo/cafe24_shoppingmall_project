@@ -1,4 +1,4 @@
-### 카테고리조회 API(/category)
+### j카테고리조회 API(/api/category)
 
 ■ request
 

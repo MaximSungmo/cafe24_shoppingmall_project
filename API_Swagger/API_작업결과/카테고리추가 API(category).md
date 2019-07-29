@@ -1,4 +1,4 @@
-### 카테고리추가 API(/category)
+### 카테고리추가 API(/api/category)
 
 ■ request
 

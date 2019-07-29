@@ -1,4 +1,4 @@
-### 로그인요청 API(/v1/api/customer/login)
+### 로그인요청 API(/api/customer/login)
 
 ■ request
 

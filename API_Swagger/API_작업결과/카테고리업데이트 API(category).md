@@ -1,4 +1,4 @@
-###  카테고리업데이트 API(/category)
+###  카테고리업데이트 API(/api/category)
 
 ■ request
 

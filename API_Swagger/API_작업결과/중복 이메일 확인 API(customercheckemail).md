@@ -1,11 +1,11 @@
-###  중복 이메일 확인 API(/customer/checkemail)
+###  중복 이메일 확인 API(/api/customer/checkemail)
 
 ■ request
 
 ```
 GET
   params:
- 	path:
+ 	query:
       {
       "email": "string",		// 이메일(ID)
       }

@@ -1,4 +1,4 @@
-###  회원정보삭제 API(/customer/{no})
+###  회원정보삭제 API(/api/customer/{no})
 
 ■ request
 

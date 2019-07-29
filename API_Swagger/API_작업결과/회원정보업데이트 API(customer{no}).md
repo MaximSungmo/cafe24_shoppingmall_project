@@ -1,4 +1,4 @@
-###  회원정보업데이트 API(/customer/{no})
+###  회원정보업데이트 API(/api/customer/{no})
 
 ■ request
 

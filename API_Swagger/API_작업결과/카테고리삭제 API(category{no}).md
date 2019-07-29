@@ -1,4 +1,4 @@
-###  카테고리삭제 API(/category/{no})
+###  카테고리삭제 API(/api/category/{no})
 
 ■ request
 
