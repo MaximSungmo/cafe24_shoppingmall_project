@@ -54,9 +54,9 @@ Relation에 관하여는 생각하지 않고 Entity만 구분하였으며 대략
 
 카테고리 테이블(category)의 경우에는 카테고리가 대, 중, 소 뿐 아니라 여러 계층으로 나뉠 수 있다는 점을 고려하여 recusive하게 구성하였다.
 
-!사진!
+- 카테고리 테이블   
 
-
+![카테고리 테이블](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/ERD/%EC%82%AC%EC%A7%84/%EC%B9%B4%ED%85%8C%EA%B3%A0%EB%A6%AC.PNG)  
 
 회원 테이블 또한 추천인이 있는 경우에도 동일하게 recusive하게 참조할 수 있도록 작성하였다. 
 
@@ -107,6 +107,28 @@ E-R 모델링 과정에서 상당한 어려움을 겪었으며 현재도 부족�
 ![상품상세정보 테이블](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/ERD/%EC%82%AC%EC%A7%84/%EC%83%81%ED%92%88%EC%83%81%EC%84%B8%EC%A0%95%EB%B3%B4.PNG)  
 
 ![옵션설정-템플릿](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/ERD/%EC%82%AC%EC%A7%84/%EC%98%B5%EC%85%98%EC%84%A4%EC%A0%95-%ED%85%9C%ED%94%8C%EB%A6%BF.PNG)  
+
+
+
+
+
+ 
+
+
+
+
+
+Issue
+
+1. 기획 및 설계
+
+
+
+2. 일정 관리 
+
+
+
+3. 개발 및 
 
 
 
