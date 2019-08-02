@@ -2,6 +2,12 @@
 
 작성자 : 김성모 
 
+# 목차 
+
+[TOC]
+
+
+
 
 
 ## 1. 서론
@@ -159,8 +165,8 @@ DB에 관해서는 변경이 되거나 고려했던 사항들에 대해서 뒤�
 ```XML
 <insert id="insert_product_detail" parameterType="productdetailvo">
     <![CDATA[
-    insert into PRODUCT_DETAIL 
-    values(null, #{product_no}, #{product_option}, #{stock_cd}, #{stock_cnt}, #{warehouse_no});
+        insert into PRODUCT_DETAIL 
+        values(null, #{product_no}, #{product_option}, #{stock_cd}, #{stock_cnt}, #{warehouse_no});
     ]]>
 </insert>
 ```
@@ -228,90 +234,226 @@ public Integer add_product_detail(List<ProductDetailVo> list) {
 
 
 
-##### 2-1-3-1  SQL 성능을 위한 처리(Join)
+##### 2-1-3-2  SQL 성능을 위한 처리(Join)
+
+상품의 정보를 가져와서 리스트로 화면에 보여주어야 한다. 다만 상품의 정보는 썸네일을 포함한 여러 이미지 파일, 다양한 옵션이 필요하다. 따라서 처음 데이터 가져오는 방식은 다음과 같았다.
+
+```XML
+<select id="get_product_list_by_result_map" resultMap="product_result_map"> 
+    <![CDATA[
+        SELECT p.no, p.NAME, p.DESCRIPTION, p.STATUS, p.USE_FL, p.LIKE_CNT, p.REGISTER_DT, p.CATEGORY_NO, p.BRAND_NO 
+        FROM PRODUCT p
+    ]]>
+</select>
+
+<select id="get_product_detail_list1" resultMap="product_detail_result_map"> 
+    <![CDATA[
+        SELECT pd.no, pd.PRODUCT_NO, pd.PRODUCT_OPTION, pd.PRICE, pd.STOCK_CD, pd.STOCK_CNT, pd.WAREHOUSE_NO
+        FROM PRODUCT_DETAIL pd
+        WHERE pd.PRODUCT_NO=#{no};
+    ]]>
+</select>
+
+<select id="get_product_image_list" resultMap="product_image_result_map"> 
+    <![CDATA[
+        SELECT pi.no, pi.PRODUCT_NO, pi.URL, pi.REGISTER_DT, pi.USE_FL,
+        pi.PRODUCT_IMAGE_CATEGORY_NO
+        FROM PRODUCT_IMAGE pi
+        WHERE pi.PRODUCT_NO=#{no};
+    ]]>
+</select>
+```
+
+모든 상품 리스트(또는 해당하는 카테고리에서의 상품 리스트)를 가져온 후 각각의 PK값을 For문으로 반복하여 데이터를 가져오는 방식으로 생각하였다. 
+
+```java
+List<ProductVo> products = sqlSession("get_product_list_by_result_map");
+for(int i=0; product_no<products.size(); i++){
+    product_no = products.get(i).getNo();
+    products.get(i).setProduct_detail_list(sqlSession("get_product_detail_list1", product_no));
+    products.get(i).setProduct_detail_image(sqlSession("get_product_image_list", product_no));
+}
+```
+
+위의 코드로 sqlSession 접속 횟수를 식으로 표현하자면 다음과 같다 .
+
+> products 목록 가져오는 데 1번 + products 목록 중 각각의 product_detail_list (n) +  product_detail_image (n)
+
+만약에 상품이 100개에서 10000개가 되었다면 sqlSession으로 요청하는 갯수는 다음과 같게 된다. 
+
+> 1 + 100 + 100 = 201번, 
+>
+> 1 + 10000 + 10000 = 20001번 
+
+상품의 개수가 커질수록 엄청난 양의 쿼리를 요청하게 된다. 과부하로 인한 문제점이 예상이 되었다. 
+
+따라서 간단하게 해결하는 방식이 필요하였고 JOIN, 단 한번의 쿼리로 정보를 받아오는 방식으로 생각하였다. 
+
+우선, ERD를 보면 테이블의 PK값으로 가지고 있는 no 값의 명칭이 중복되는 것을 알 수 있다. 이를 해결하기 위하여 각 column에 해당하는 자료를 alias를 사용하여 명칭을 명확히 구분하였다. 
+
+```xml
+<select id="get_product_list_by_result_map" resultMap="product_result_map" parameterType="long"> 
+    <![CDATA[
+        SELECT 
+        p.no
+        , p.NAME
+        , p.DESCRIPTION
+        , p.STATUS
+        , p.USE_FL
+        , p.LIKE_CNT
+        , p.REGISTER_DT
+        , p.CATEGORY_NO
+        , p.BRAND_NO 
+
+        , pd.no as pd_no
+        , pd.PRODUCT_NO as pd_product_no
+        , pd.PRODUCT_OPTION
+        , pd.PRICE
+        , pd.STOCK_CD
+        , pd.STOCK_CNT
+        , pd.WAREHOUSE_NO
+
+        , pi.no as pi_no
+        , pi.PRODUCT_NO as pi_product_no
+        , pi.URL as pi_url
+        , pi.REGISTER_DT as pi_register_dt
+        , pi.use_fl as pi_use_fl
+        , pi.PRODUCT_IMAGE_CATEGORY_NO
+
+        FROM PRODUCT p
+        LEFT JOIN PRODUCT_DETAIL pd on(p.no=pd.PRODUCT_NO)
+        LEFT JOIN PRODUCT_IMAGE pi on(p.no=pi.PRODUCT_NO)
+    ]]>
+    <if test='value!=0'></if>
+        <![CDATA[
+            WHERE p.category_no=#{value}
+        ]]>
+</select>	
+```
+
+이제 Join을 활용하여 데이터를 가지고 올 수 있게 준비가 되었다. 동일 product_no를 갖는 데이터에 대해서만 매칭되어 결과 값으로 나오게 될 것이다. 하지만 이를 받아줄 데이터형이 필요하다.  현재 만들어 놓은 객체들은 DB와 동일하게 구성한 객체 클래스로 가지고 있다. DTO를 활용하여 만들어주는 방법도 고려할 수 있으나 현재 만들어 놓은 객체에 SELECT된 결과가 들어오면 좋겠다고 생각을 했다. 
+
+```XML
+<resultMap type="productvo" id="product_result_map"> 
+    <id property="no" column="no" /> 
+    <result property="name" column="name" />
+    <result property="description" column="description" />
+    <result property="status" column="status" />
+    <result property="use_fl" column="use_fl" />
+    <result property="like_cnt" column="like_cnt" />
+    <result property="register_dt" column="register_dt" />
+    <result property="category_no" column="category_no" />
+    <result property="brand_no" column="brand_no" />
+
+    <collection property="product_detail_list" resultMap="product_detail_result_map"/> 
+    <collection property="product_image_list" resultMap="product_image_result_map"/>
+</resultMap> 
+
+<resultMap type="com.cafe24.shop.vo.ProductDetailVo" id="product_detail_result_map"> 
+    <id property="no" column="pd_no" /> 
+    <result property="product_no" column="pd_product_no" /> 
+    <result property="product_option" column="product_option" /> 
+    <result property="price" column="price" /> 
+    <result property="stock_cd" column="stock_cd" /> 
+    <result property="stock_cnt" column="stock_cnt" /> 
+    <result property="warehouse_no" column="warehouse_no" /> 
+</resultMap> 
+
+<resultMap type="com.cafe24.shop.vo.ProductImageVo" id="product_image_result_map"> 
+    <id property="no" column="pi_no" /> 
+    <result property="product_no" column="pi_product_no" /> 
+    <result property="url" column="pi_url" /> 
+    <result property="register_dt" column="pi_register_dt" /> 
+    <result property="use_fl" column="pi_use_fl" /> 
+    <result property="product_image_category_no" column="product_image_category_no" /> 
+    <association property="product_image_category_vo" resultMap="product_image_category_result_map"/>
+</resultMap> 
+```
+
+위와 같이 처리를 해줌으로써 데이터는 JSON형태로 보았을 때 다음과 같은 형식으로 반환이 될 것이다.
+
+```json
+{
+  "brand_no": 0,
+  "category_no": 0,
+  "categoryvo": {
+    "name": "string",
+    "no": 0,
+    "parent_no": 0,
+    "product_list": [
+      {}
+    ]
+  },
+  "description": "string",
+  "like_cnt": 0,
+  "name": "string",
+  "no": 0,
+  "product_detail_list": [
+    {
+      "no": 0,
+      "price": 0,
+      "product_no": 0,
+      "product_option": "string",
+      "stock_cd": "string",
+      "stock_cnt": 0,
+      "warehouse_no": 0
+    }
+  ],
+  "product_image_list": [
+    {
+      "no": 0,
+      "product_image_category_no": 0,
+      "product_no": 0,
+      "register_dt": "string",
+      "url": "string",
+      "use_fl": "string"
+    }
+  ],
+  "register_dt": "string",
+  "status": "string",
+  "use_fl": "string"
+}
+```
+
+따라서 한 번의 쿼리로 모든 상품의 대한 상세정보, 이미지 포함된 정보가 반환이 되므로 상품에 대한 반복쿼리에 대한 고민을 해결할 수 있게 되었다.
+
+
+
+##### 2-1-3-3  SQL 성능을 위한 처리(변경되지 않은 값 update 하지 않고 static한 SQL작성하여 쿼리 캐싱률 높이기)
+
+데이터를 수정하는 경우에는 update 진행을 하게 되는데, SQL문은 고정이 되어 있으므로 정보
+
+
+
+기존의 query는 동적으로 값을 할당하였다. 조건문으로 분기하여 성능이 느려지고 한 눈에 보기에도 여러 조건으로 나뉘게 되어 복잡한 구조를 만들어내었다. 
+
+먼저 
+
+```xml
+<select id="get_product_image_list" resultMap="product_image_result_map" parameterType="productimagevo"> 
+		<![CDATA[
+			select 
+				pi.no as pi_no
+				, pi.product_no as pi_product_no
+				, pi.url as pi_url
+				, pi.register_dt as pi_register_dt
+				, pi.use_fl as pi_use_fl
+				, pi.product_image_category_no as pi_product_image_category_no
+				, pic.no as pic_no
+				, pic.NAME as pic_name
+				, pic.REGISTER_DT as pic_register_dt
+				, pic.DELETE_DT as pic_delete_dt
+				, pic.USE_FL as pic_use_fl
+			from 
+				PRODUCT_IMAGE as pi 
+			LEFT JOIN PRODUCT_IMAGE_CATEGORY as pic ON(pi.PRODUCT_IMAGE_CATEGORY_NO = pic.no)
+			where pi.product_no = #{product_no} 
+			and (pi.product_image_category_no = #{product_image_category_no} or 
+			#{product_image_category_no} is null);
+		]]>
+</select>	
+```
 
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-Issue
-
-1. 기획 및 설계
-
-
-
-2. 일정 관리 
-
-
-
-3. 개발 및 
-
-
-
-
- 
-
-
-
-
-
-Issue
-
-1. 기획 및 설계
-
-
-
-2. 일정 관리 
-
-
-
-3. 개발 및 
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-Issue
-
-1. 기획 및 설계
-
-
-
-2. 일정 관리 
-
-
-
-3. 개발 및 
-
-
-
-
-
- 
 
 
 
