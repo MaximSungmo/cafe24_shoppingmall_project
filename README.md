@@ -42,7 +42,7 @@
 
 #### 2-1-2.  확장성을 생각한 Entity-Relation 모델링, 개발 과정에서의 변경
 
-UC를 작성한 뒤 Entity-Relation 모델링을 진행하였다. 첫 단계에서는 다음과 같이 Entity를 시나리오에 맞추어 구성하였다. 
+UC를 작성한 뒤 Entity-Relation 모델링을 진행하였다. 첫 단계에서는 다음과 같이 Entity를 시나리오에 맞추어 구성하였다.   
 
 ![ERD_20190703(1)](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/ERD/1%EC%B0%A8/ERD_20190703(1).PNG)
 
@@ -91,6 +91,16 @@ E-R 모델링 과정에서 상당한 어려움을 겪었으며 현재도 부족�
 
 위 조건들을 충족시키는 방향으로 생각을 해보니 “옵션설정-템플릿”을 만들어서 클라이언트가 자신에게 필요한 옵션들을 추가할 수 있는 템플릿을 DB에 담은 뒤, 자바스크립트로 프론트단에서 정보를 카테시안 프로덕트와 같이 나올 수 있도록 화면에 뿌려준 뒤 각 옵션을 가져와 원자성을 무시한 채 정보를 넣는 방식으로 생각했다. 테이블을 보자면 다음과 같다. 
 
+- 기존 상품상세정보의 상품옵션
+
+![상품상세정보 테이블](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/ERD/%EC%82%AC%EC%A7%84/%EC%83%81%ED%92%88%EC%83%81%EC%84%B8%EC%A0%95%EB%B3%B4.PNG)   
+
+- 기존의 옵션설정-템플릿  
+
+![옵션설정-템플릿](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/ERD/%EC%82%AC%EC%A7%84/%EC%98%B5%EC%85%98%EC%84%A4%EC%A0%95-%ED%85%9C%ED%94%8C%EB%A6%BF.PNG)  
+
+- 기존에 생각했던 옵션설정-템플릿 테이블
+
 | 옵션설정템플릿번호 | 옵션세트명 | 옵션사이즈 |
 | ------------------ | ---------- | ---------- |
 | 1                  | 사이즈     | 100        |
@@ -102,12 +112,151 @@ E-R 모델링 과정에서 상당한 어려움을 겪었으며 현재도 부족�
 
 위의 표와 같이 옵션설정템플릿을 설정해주면 프론트단에서 화면으로 해당 옵션세트명으로 데이터를 가져간 뒤 각각의 아이템을 옵션세트가 다른 정보끼리 조합하여 “100/검정, 100/흰색, 100/보라....80/보라“ 와 같은 방식으로 상품상세정보 테이블에 옵션을 넣어주는 것으로 생각을 하였다. 참 말도 안되는 생각을 하였다고 판단하여 여러 방식으로 변경할 수 있는 방법은 없을 지 찾아보았지만 당시에는 별다른 방법이 떠오르지 않았고 우선 개발은 진행해야만 했다.   
 
-- 기존 옵션 테이블 
+- 기존에 생각했던 테이블 예시  
 
-![상품상세정보 테이블](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/ERD/%EC%82%AC%EC%A7%84/%EC%83%81%ED%92%88%EC%83%81%EC%84%B8%EC%A0%95%EB%B3%B4.PNG)  
+| 상품상세번호 | 상품번호 | 상품옵션      | 재고 수량 |
+| ------------ | -------- | ------------- | --------- |
+| 1            | 1        | 1/4(100/검정) | 2         |
+| 2            | 1        | 1/5(100/흰색) | 3         |
+| 3            | 1        | 1/6(100/보라) | 4         |
+| 4            | 1        | ...           | 5         |
+| 5            | 1        | ...           | 0         |
+| 6            | 1        | ...           | 0         |
+| 7            | 1        | ...           | 1         |
+| 8            | 1        | 3/8(80/흰색)  | 2         |
+| 9            | 1        | 3/9(80/보라)  | 3         |
 
-![옵션설정-템플릿](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/ERD/%EC%82%AC%EC%A7%84/%EC%98%B5%EC%85%98%EC%84%A4%EC%A0%95-%ED%85%9C%ED%94%8C%EB%A6%BF.PNG)  
+   
 
+- 변경 예정인 테이블 예시
+
+> 설명필요 (추 후 작성 예정)
+
+DB에 관해서는 변경이 되거나 고려했던 사항들에 대해서 뒤에서 설명하도록 하겠다.
+
+
+
+#### 2-1-3 프로젝트 계획과 설계를 통한 개발 일정 산정, 과연 타당한가? 
+
+현재까지 프로젝트를 계획하여 UC를 뽑아내고 E-R 모델링을 하며 전체적인 그림을 그려왔다. 따라서 필요한 API 목록을 뽑아내어 주어진 시간 내 개발할 수 있도록 시간을 분배하는 과정이 남아있다. 
+
+우선 한 가지 짚고 넘어가자면 본인은 개발 경험이 많지 않고 더군다나 일정을 고려하며 개발한 적은 단 한번도 없었다. 개인 포트폴리오를 위하여 일이 끝난 뒤 취미와 같이 간단한 부분만 구현했던 것이 전부였다. 결과적으로 본인의 역량과 API를 개발하는 부분에 대해서 정확한 파악을 하지 못했다. 또한 예상하지 못했거나 또는 변경 및 오류 해결로 인해 소요되는 시간 등에 대해서 매우 적은 비율로 전체 시간을 배분하였다. 
+
+설계가 끝난 뒤(정확히 말하자면 설계를 잠시 뒤로 미뤄두고) 첫 째로 API의 목록을 개발하기 위해서 Test case(이하 TC)를 작성하게 되었다. TC에 대해서는 현재 교육하는 과정의 동료들과 함께 스터디를 진행하며 사전에 학습을 한 경험은 있었지만 실제로 적용해서 무언가 프로젝트를 진행한 적은 없었다. 따라서 TC를 작성하기 위한 사용법을 실전에 적용하기 위한 학습을 하는 데 많은 시간이 소요가 되었다(약 3일). TC를 작성할 당시에는 DB에 연결하는 부분은 배제하고 Mock web 연결과 데이터 흐름이 제대로 진행이 되는 부분에 대해서만 확인을 하였다. 작업이 상당히 빠르게 진행되었다. SQL문을 따로 생각하지 않고 전체적인 데이터의 흐름만 생각하였으며 모든 데이터가 DB를 거치지 않으니 오류가 발생할 일이 적었다. 그래서 하나의 API를 개발하는 과정에서 소요되는 시간이 매우 짧았다. 그래서 일정을 짧게 잡았다. 하지만 개발 도중에 DB를 연결하여 API를 개발하게 되어 SQL문을 작성하고 기존에 작성한 API의 변경이 필요하여 예상했던 시간보다 상당히 많은 시간을 소요하게 되었다.    
+
+- [개발 일정 관리표 확인하기](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/%EA%B0%9C%EB%B0%9C%20%EC%9D%BC%EC%A0%95%20%EA%B4%80%EB%A6%AC%ED%91%9C.md)
+
+또한 추가적으로 Query 의 성능에 대한 문제를 생각하다보니 SQL문을 변경하고 다양한 방법에 대해 고민하게 되었다. 
+
+##### 2-1-3-1  SQL 성능을 위한 처리(벌크 인서트...)
+
+단순하게 생각했을 때 Query를 전송하기 위하여 SqlSession에 For문을 통해 **반복적인 삽입**을 진행하였다.
+
+상품 상세 정보 테이블을 예시로 보자면 우선 기존에 생각했던 SQL은 다음과 같다.
+
+- SqlSession에서의 배치 처리 
+
+```XML
+<insert id="insert_product_detail" parameterType="productdetailvo">
+    <![CDATA[
+    insert into PRODUCT_DETAIL 
+    values(null, #{product_no}, #{product_option}, #{stock_cd}, #{stock_cnt}, #{warehouse_no});
+    ]]>
+</insert>
+```
+
+```java
+public Integer add_product_detail(List<ProductDetailVo> list) {
+    for(int vo=0; i<list.size(); i++){
+        sqlSession.insert("insert_product_detail",vo);
+    }
+}
+```
+
+여기서 궁금한 점이 생겼다. 리스트 형태로 데이터를 받아와서 sqlSession을 계속 호출하게 되는 것은 문제가 없을 지, 다른 방식으로 데이터를 효율적으로 처리할 수 없을 지 생각하게 되었으며 관련 내용을 찾아보았다. list 형태의 데이터를 mybatis xml에서 처리 가능하다는 것을 알게 되었다. 과연 둘 중 어느 것이  효율적일까?
+
+관련된 테스트를 진행한 결과가 있어서 직접 테스트하지 않고 결과를 공유하고자 한다. 결론은 xml에서의 foreach가 SqlSession에서의 배치처리보다 훨씬 효율적인 처리가 가능하다는 것을 알게 되었다.  
+
+약 10만건의 데이터를 update, insert 한 결과가 다음과 같이 나왔다고 한다.
+
+| 분류(건수)           | sqlSession 배치의 처리 시간 | xml에서 Foreach의 처리 시간 |
+| -------------------- | --------------------------- | --------------------------- |
+| update(100,000 rows) | 68(ms)                      | 7(ms)                       |
+| insert(100,000 rows) | 75(ms)                      | 12(ms)                      |
+
+[출처:https://yookeun.github.io/java/2015/06/19/mybatis-batch/](https://yookeun.github.io/java/2015/06/19/mybatis-batch/)
+
+
+
+따라서 위의 코드는 다음의 방식으로 변경되었다.
+
+- xml에서 Foreach
+
+```xml
+<insert id="insert_product_detail" parameterType="java.util.List">
+		<![CDATA[
+			insert into PRODUCT_DETAIL 
+		    values
+		]]>
+		<foreach item="item" index="index" collection="list" separator=", " >
+		<![CDATA[  
+		    (
+			    null, 
+			    #{item.product_no},
+			    #{item.product_option}, 
+			    #{item.price}, 
+			    #{item.stock_cd}, 
+			    #{item.stock_cnt}, 
+			    #{item.warehouse_no} 
+		    )
+		]]>
+		</foreach>
+</insert>
+```
+
+```java
+public Integer add_product_detail(List<ProductDetailVo> list) {
+		return sqlSession.insert("product.insert_product_detail", list);
+}
+```
+
+
+
+이 외에도 카테고리, 이미지, 장바구니에 적용하였지만 데이터가 많지 않아서 실제로 속도의 차이가 크게 날 것으로 보이지는 않는다.   
+
+추가적인 고민으로는 과연 여러 건의 데이터가 입력될 때 오류로 인한 실패가 발생하여 rollback하는 경우와 batch를 나누어서 입력하는 경우에 대한 학습이 필요할 것으로 생각된다.   
+
+
+
+##### 2-1-3-1  SQL 성능을 위한 처리(Join)
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+Issue
+
+1. 기획 및 설계
+
+
+
+2. 일정 관리 
+
+
+
+3. 개발 및 
 
 
 
