@@ -4,8 +4,9 @@ API-Swagger
 2. 2019-08-02 Update
 ---
 <br/>
-### [Customer-Controller API LIST  
-![Customer-Controller API LIST](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/API_Swagger/customer-controller.PNG)
+### Customer-Controller API LIST
+   
+![customer-controller API LIST](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/API_Swagger/customer-controller.PNG)
 <br/>
 
 ### Terms_of_use-Controller API LIST  
