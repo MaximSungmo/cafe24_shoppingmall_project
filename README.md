@@ -419,40 +419,118 @@ for(int i=0; product_no<products.size(); i++){
 
 
 
-##### 2-1-3-3  SQL 성능을 위한 처리(변경되지 않은 값 update 하지 않고 static한 SQL작성하여 쿼리 캐싱률 높이기)
+##### 2-1-3-3  SQL 성능을 위한 처리( 변경 데이터 row, static한 SQL 쿼리 캐싱률 높이기)
 
-데이터를 수정하는 경우에는 update 진행을 하게 되는데, SQL문은 고정이 되어 있으므로 정보
+데이터를 수정하는 경우에는 update 진행을 하게 되는데, SQL문은 고정이 되어 있으므로 모든 정보가 업데이트된다. 회원정보를 수정하는 작업에서도 변경하려고 건드리지 않은 데이터도 모두 제 값으로 한번 변경이 된다. 
 
+만약 많은 데이터가 변경이 되어야 하는 경우에는 성능을 개선할 수 있는 방법은 없을까? 생각하였다. 
 
-
-기존의 query는 동적으로 값을 할당하였다. 조건문으로 분기하여 성능이 느려지고 한 눈에 보기에도 여러 조건으로 나뉘게 되어 복잡한 구조를 만들어내었다. 
-
-먼저 
+- 기존 Query 예시
 
 ```xml
-<select id="get_product_image_list" resultMap="product_image_result_map" parameterType="productimagevo"> 
-		<![CDATA[
-			select 
-				pi.no as pi_no
-				, pi.product_no as pi_product_no
-				, pi.url as pi_url
-				, pi.register_dt as pi_register_dt
-				, pi.use_fl as pi_use_fl
-				, pi.product_image_category_no as pi_product_image_category_no
-				, pic.no as pic_no
-				, pic.NAME as pic_name
-				, pic.REGISTER_DT as pic_register_dt
-				, pic.DELETE_DT as pic_delete_dt
-				, pic.USE_FL as pic_use_fl
-			from 
-				PRODUCT_IMAGE as pi 
-			LEFT JOIN PRODUCT_IMAGE_CATEGORY as pic ON(pi.PRODUCT_IMAGE_CATEGORY_NO = pic.no)
-			where pi.product_no = #{product_no} 
-			and (pi.product_image_category_no = #{product_image_category_no} or 
-			#{product_image_category_no} is null);
-		]]>
-</select>	
+<update id="update_product_image_list" parameterType="java.util.List">		
+	<foreach item="item" index="index" collection="list" separator=";" open="" close=";">
+        <![CDATA[  
+            UPDATE PRODUCT_IMAGE
+            SET 
+            url = #{item.url}
+            , use_fl = #{item.use_fl}
+            , product_image_category_no = #{item.product_image_category_no}
+            WHERE 
+            no = #{item.no}           
+        ]]>  
+    </foreach>
+</update>
 ```
+
+동일한 객체가 변경이 동일값으로 업데이트를 요청하는 경우 또는 여러 객체를 어쩔 수 없이 한번에 업데이트 요청하는데 정보 변경이 안된 데이터는 굳이 query가 진행되지 않아야만 불필요한 작업을 하지 않을 수 있다. 이에 따라서 SQL문을 다음과 같이 변경하였다.
+
+- 변경된 Query 예시
+
+```xml
+<update id="update_product_image_list" parameterType="java.util.List">		
+	<foreach item="item" index="index" collection="list" separator=";" open="" close=";">
+        <![CDATA[  
+            UPDATE PRODUCT_IMAGE
+            SET 
+            url = #{item.url}
+            , use_fl = #{item.use_fl}
+            , product_image_category_no = #{item.product_image_category_no}
+            WHERE 
+            no = #{item.no}
+            and ((use_fl <> #{use_fl}) or (url <>#{item.url}) or 
+            (product_image_category_no <> #{item.product_image_category_no}) )
+        ]]>  
+    </foreach>
+</update>
+```
+
+변경되는 데이터가 없다면 query는 진행되지 않도록 하였다. 확대하여 생각해보면 약 100만건의 데이터를 업데이트하는 경우가 발생하였을 때 실제 변경이 된 약 1만건의 데이터만 업데이트가 진행되어야 하는 경우, 모든 데이터를 업데이트하는 것보다 실제 변경이 된 1만건만 진행될 수 있도록 하는 것이 성능에 도움이 된다. 
+
+
+
+DB optimizer에 관한 교육을 3일간 들으면서 알게된 내용으로는 DB가 요청받은 SQL문을 가지고 캐시를 남기어 이 후에는 DB 서버가 재부팅되기 전까지 검색 성능을 좋게 만들 캐시들을 가지고 있다고 하였다.
+
+단, 조건에 따라 SQL 문장이 달라지는 경우(byte가 달라지는 경우, 대 소문자가 다른 경우도 포함)에는 다른 SQL문으로 캐시해놓는다. 따라서 분기문을 사용하는 경우에는 각각 다른 조건의 SQL문이 캐시가 된다. 
+
+**어떻게하면 동일한 SQL 문으로 조건을 분기시키는 것과 동일한 결과를 뽑아낼 수 있을까?**  기존의 query는 동적으로 값을 할당하였다. 조건문으로 분기하여 성능이 느려지고 한 눈에 보기에도 여러 조건으로 나뉘게 되어 복잡한 구조를 만들어내었다. 
+
+- 기존 상품 가져오는 API
+
+```xml
+<select id="get_product_list" parameterType="map" resultType="productvo">
+    <![CDATA[
+   select no, name, description, status, use_fl, like_cnt, register_dt, category_no, brand_no 
+   from PRODUCT		 
+ 	]]>	
+
+    <if test='category_no!=0'>
+        <![CDATA[
+        where category_no=#{category_no}
+       ]]>	
+        <if test="kwd!=''">
+            <![CDATA[
+             and name like CONCAT('%',#{kwd},'%')
+            ]]>
+        </if>
+    </if>
+
+    <if test='category_no==0'>
+        <if test="kwd!=''">
+            <![CDATA[
+             where name like CONCAT('%',#{kwd},'%')
+            ]]>
+        </if>
+    </if>
+    <![CDATA[
+       order by no asc
+       limit #{get_count} offset #{last_product_no}
+  	]]>	
+</select>
+```
+
+
+
+```XML
+<select id="get_product_list" parameterType="map" resultType="productvo">
+    <![CDATA[
+   	select no, name, description, status, use_fl, like_cnt, register_dt, category_no, brand_no 
+   	from PRODUCT		 
+ 	
+	where 
+		(category_no = #{category_no} and #{category_no}<>0) 
+		and (name like CONCAT('%', #{kwd}, '%') and #{kwd}<>'')
+   	order by no asc
+    limit #{get_count} offset #{last_product_no}
+	]]>	
+</select>
+```
+
+이와 같이 Static Query문을 작성하여 자주 사용하게 될 검색 DB의 성능을 개선시키고자 하였다.
+
+
+
+
 
 
 
