@@ -6,10 +6,7 @@
 
 [TOC]
 ![목차](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/%EB%AA%A9%EC%B0%A8.PNG)
-
-
-
-
+  
 
 ## 1. 서론
 
@@ -33,12 +30,12 @@
 
 초기 2주 간의 프로젝트 계획을 진행하였다. 계획 당시에 Usecase diagram 을 우선적으로 작성한 뒤 각각의 Usecase별(이하 UC)로 시나리오를 작성하는 방향으로 생각하였다. 그리하여 다음과 같은 방식으로 각 UC에 대한 시나리오를 작성하였다.   
 
-### Usecase Diagram
+##### Usecase Diagram
 
 ![Usecase Diagram](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/Usecase/2%EC%B0%A8/cafe24_shoppingmall_usecase_diagram_20190705.PNG)
 <br/>  
 
-### Usecase 식별자 목록
+##### Usecase 식별자 목록
 
 | 식별자 |    행위자    |     설명      |
 | :----: | :----------: | :-----------: |
@@ -616,4 +613,4 @@ API 서버를 만들면서 개발 일정과 성능 및 보안에 대하여 고�
 
 
 
-### [별첨1. API LIST](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/API_Swagger/README.md)
+##### [별첨1. API LIST](https://github.com/MaximSungmo/cafe24_shoppingmall_project/blob/master/API_Swagger/README.md)
