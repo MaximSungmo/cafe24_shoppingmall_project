@@ -3,7 +3,7 @@
 담당자 : 김성모 <br/>
 
 ## [API 서버 개발(2019-07-01 ~ 2019-08-04)](https://github.com/MaximSungmo/cafe24_shoppingmall_project/wiki/API-%EC%84%9C%EB%B2%84-%EA%B0%9C%EB%B0%9C) <br/>
-## CLIENT 서버 개발 <br/>
+## [CLIENT 서버 개발](https://github.com/MaximSungmo/cafe24_shoppingmall_project/wiki/CLIENT-%EC%84%9C%EB%B2%84-%EA%B0%9C%EB%B0%9C) <br/>
 
 
 ## 변경 관리(각 폴더별 README.md)
